@@ -1,0 +1,57 @@
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Logs
+# =========================
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# React (client)
+# =========================
+/client/node_modules/
+/client/dist/
+/client/.vite/
+/client/.cache/
+/client/components.json
+
+# =========================
+# Laravel (server-api)
+# =========================
+/server-api/vendor/
+/server-api/node_modules/
+/server-api/bootstrap/cache/*
+/server-api/storage/*.key
+/server-api/storage/framework/cache/*
+/server-api/storage/framework/sessions/*
+/server-api/storage/framework/views/*
+/server-api/storage/logs/*
+/server-api/public/build/
+/server-api/public/hot/
+
+# =========================
+# Testing / Coverage
+# =========================
+coverage/
+*.lcov
+
+# =========================
+# Temp / Misc
+# =========================
+.tmp/
+.cache/
