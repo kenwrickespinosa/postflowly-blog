@@ -10,7 +10,9 @@ class Story extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'content'
+        'excerpt',
+        'cover_image',
+        'content',
     ];
 
     public function user(): BelongsTo

@@ -37,6 +37,7 @@ class StoryController extends Controller
         $validated = $request->validate([
             'title' => 'string|required|min:1|max:255',
             'excerpt' => 'string|nullable|max:255',
+            'cover_image' => 'string|nullable',
             'content' => 'required|string'
         ]);
 
@@ -44,6 +45,7 @@ class StoryController extends Controller
             'user_id' => $user->id,
             'title' => $validated['title'],
             'excerpt' => $validated['excerpt'],
+            'cover_image' => $validated['cover_image'],
             'content' => $validated['content'],
         ]);
 
