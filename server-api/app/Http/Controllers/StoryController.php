@@ -32,12 +32,14 @@ class StoryController extends Controller
 
         $validated = $request->validate([
             'title' => 'string|required|min:1|max:255',
+            'excerpt' => 'string|nullable|max:255',
             'content' => 'required|string'
         ]);
 
         $story = Story::create([
             'user_id' => $user->id,
             'title' => $validated['title'],
+            'excerpt' => $validated['excerpt'],
             'content' => $validated['content'],
         ]);
 
