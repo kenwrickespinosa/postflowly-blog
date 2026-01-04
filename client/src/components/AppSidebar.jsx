@@ -37,9 +37,15 @@ function AppSidebar() {
     try {
       const token = localStorage.getItem("token");
 
+      if (!token) {
+        navigate("/");
+        return;
+      }
+
       const res = await fetch("http://127.0.0.1:8000/api/auth/logout", {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         }
       })
@@ -48,6 +54,7 @@ function AppSidebar() {
 
       if (!res.ok) throw new Error(data.message || "Failed to logout");
 
+      localStorage.removeItem("token");
       navigate("/");
     } catch (err) {
       console.error(err);
