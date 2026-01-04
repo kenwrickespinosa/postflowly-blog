@@ -10,7 +10,11 @@ class StoryController extends Controller
 {
     public function index(Request $request)
     {
-        $story = Story::with('user:id,firstname,lastname,email')->inRandomOrder()->get();
+        // $story = Story::with('user:id,firstname,lastname,email')->inRandomOrder()->get();
+
+        $story = Story::where('user_id', '!=', $request->user()->id)
+            ->with('user:id,firstname,lastname,email')
+            ->inRandomOrder()->get();
 
         return response()->json([
             'story' => $story,
@@ -48,5 +52,19 @@ class StoryController extends Controller
             'message' => 'Story created successfully',
             'story' => $story
         ], 201);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|max:10240',
+        ]);
+
+        $path = $request->file('file')->store('stories', 'public');
+
+        // Return URL for Tiptap to insert
+        $url = asset("storage/$path");
+
+        return response()->json(['url' => $url]);
     }
 }
