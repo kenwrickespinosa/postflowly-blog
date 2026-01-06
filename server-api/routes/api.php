@@ -14,6 +14,8 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/story/index', [StoryController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/read-story/{id}', [StoryController::class, 'show'])->middleware('auth:sanctum');
 Route::get('/story/my-published-stories', [StoryController::class, 'myPublishedStories'])->middleware('auth:sanctum');
 Route::post('/story/store', [StoryController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/story/upload-image', [StoryController::class, 'uploadImage'])->middleware('auth:sanctum');
+Route::post('/story/upload-cover-image', [StoryController::class, 'uploadCoverImage'])->middleware('auth:sanctum');
