@@ -12,21 +12,36 @@ class StoryController extends Controller
     {
         // $story = Story::with('user:id,firstname,lastname,email')->inRandomOrder()->get();
 
-        $story = Story::where('user_id', '!=', $request->user()->id)
+        $stories = Story::where('user_id', '!=', $request->user()->id)
             ->with('user:id,firstname,lastname,email')
-            ->inRandomOrder()->get();
+            ->inRandomOrder()
+            ->get()
+            ->map(function ($story) {
+                if ($story->cover_image) {
+                    $story->cover_image = asset('storage/' . $story->cover_image);
+                }
+                return $story;
+            });
 
         return response()->json([
-            'story' => $story,
+            'story' => $stories,
         ]);
     }
 
     public function myPublishedStories(Request $request)
     {
-        $story = Story::where('user_id', $request->user()->id)->latest()->get();
+        $stories = Story::where('user_id', $request->user()->id)
+        ->latest()
+        ->get()
+        ->map(function ($story) {
+            if ($story->cover_image) {
+                $story->cover_image = asset('storage/' . $story->cover_image);
+            }
+            return $story;
+        });
 
         return response()->json([
-            'story' => $story,
+            'story' => $stories,
         ]);
     }
 
@@ -68,5 +83,19 @@ class StoryController extends Controller
         $url = asset("storage/$path");
 
         return response()->json(['url' => $url]);
+    }
+
+    public function uploadCoverImage(Request $request)
+    {
+        $request->validate([
+            'cover' => 'required|image|max:10240'
+        ]);
+
+        $path = $request->file('cover')->store('covers', 'public');
+
+        return response()->json([
+            'path' => $path,
+            'url' => asset("storage/$path")
+        ]);
     }
 }
