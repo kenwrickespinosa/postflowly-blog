@@ -34,32 +34,29 @@ function AppSidebar() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
     try {
-      const token = localStorage.getItem("token");
+      if (token) {
+        const res = await fetch("http://127.0.0.1:8000/api/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!token) {
-        navigate("/");
-        return;
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Failed to logout");
       }
-
-      const res = await fetch("http://127.0.0.1:8000/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        }
-      })
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to logout");
-
-      localStorage.removeItem("token");
-      navigate("/");
     } catch (err) {
       console.error(err);
+    } finally {
+      localStorage.removeItem("token");
+      navigate("/");
     }
-  }
+  };
 
   return (
     <Sidebar>
@@ -99,11 +96,18 @@ function AppSidebar() {
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle className="font-inter mt-6">Are you sure you want to logout?</DialogTitle>
+                  <DialogTitle className="font-inter mt-6">
+                    Are you sure you want to logout?
+                  </DialogTitle>
                   <DialogDescription className="sr-only" />
                 </DialogHeader>
                 <div className="flex justify-end">
-                  <Button onClick={handleLogout} className="font-inter w-25 cursor-pointer">Yes</Button>
+                  <Button
+                    onClick={handleLogout}
+                    className="font-inter w-25 cursor-pointer"
+                  >
+                    Yes
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>

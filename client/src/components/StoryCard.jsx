@@ -1,7 +1,10 @@
 import React from "react";
 import { FaCalendar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function StoryCard({ story }) {
+  const navigate = useNavigate();
+
   // Format date to string
   const formatDate = () => {
     if (!story.created_at) return "";
@@ -17,22 +20,30 @@ function StoryCard({ story }) {
     return date.toLocaleDateString("en-PH", options);
   };
 
+  const openStory = () => {
+    navigate(`/read-story/${story.id}`);
+  };
+
   return (
-    <div className="p-4 md:px-8">
+    <div onClick={openStory} className="p-4 cursor-pointer md:px-8">
+      <div className="mb-4 md:mb-6">
+        <p className="font-inter text-neutral-600 text-sm">
+          {story.user?.firstname} {story.user?.lastname}
+        </p>
+        <p className="font-inter text-neutral-600 text-xs">
+          {story.user?.email}
+        </p>
+      </div>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-12">
         {/* Image */}
         <div className="order-1 md:order-2 flex justify-center md:justify-end">
           <div className="w-full h-40 md:h-48 bg-neutral-200 rounded">
-            img here
+            <img src={story.cover_image} className="h-full w-full" />
           </div>
         </div>
 
         {/* Content */}
         <div className="order-2 md:order-1 flex flex-col gap-2">
-          <p>
-            {story.firstname} {story.lastname}
-          </p>
-
           <p className="font-inter text-lg md:text-2xl">{story.title}</p>
 
           <p

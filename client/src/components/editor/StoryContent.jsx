@@ -1,9 +1,15 @@
-import { EditorContent, useEditor } from "@tiptap/react";
+import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { renderToReactElement } from "@tiptap/static-renderer";
 import React from "react";
 
-function StoryContent({ content }) {
+function StoryContent({
+  content,
+  fontType,
+  textSizeSm,
+  textSizeMd,
+  textTrackingSm,
+  textTrackingMd,
+}) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: content,
@@ -13,8 +19,10 @@ function StoryContent({ content }) {
   if (!editor) return null;
 
   return (
-    <EditorContent editor={editor} />
-    // <div className="prose" dangerouslySetInnerHTML={{ __html: content }} />
+    <div
+      className={`prose ${fontType} ${textSizeSm} ${textTrackingSm} md:${textSizeMd} ${textTrackingMd}`}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 }
 
