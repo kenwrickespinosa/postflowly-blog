@@ -7,8 +7,10 @@ function MainSidebar() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
+      <main className="w-full md:w-screen">
+      <div className="block md:hidden">
         <SidebarTrigger />
+      </div>
         <Outlet />
       </main>
     </SidebarProvider>
