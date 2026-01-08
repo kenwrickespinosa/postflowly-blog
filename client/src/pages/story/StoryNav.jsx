@@ -4,7 +4,7 @@ import { NavLink, Outlet } from "react-router-dom";
 function StoryNav() {
   return (
     <div className="flex flex-col md:gap-28 md:mt-20">
-      <nav className="flex justify-center gap-10">
+      <nav className="flex justify-center gap-4 md:gap-10">
         <NavLink
           to="write-story"
           end={false}

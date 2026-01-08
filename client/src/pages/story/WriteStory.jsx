@@ -2,14 +2,16 @@ import StoryEditor from "@/components/editor/StoryEditor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function WriteStory() {
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
+  const [image, setImage] = useState(null);
   const [content, setContent] = useState("");
 
   const editorRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +25,31 @@ function WriteStory() {
     try {
       const token = localStorage.getItem("token");
 
-      const payload = { title, excerpt, content };
+      let coverImagePath = null;
+
+      if (image) {
+        const formData = new FormData();
+        formData.append("cover", image);
+
+        const uploadRes = await fetch(
+          "http://127.0.0.1:8000/api/story/upload-cover-image",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
+
+        const uploadData = await uploadRes.json();
+        if (!uploadRes.ok)
+          throw new Error(uploadData.message || "Failed to upload cover image");
+
+        coverImagePath = uploadData.path;
+      }
+
+      const payload = { title, excerpt, cover_image: coverImagePath, content };
 
       const res = await fetch("http://127.0.0.1:8000/api/story/store", {
         method: "POST",
@@ -45,7 +71,11 @@ function WriteStory() {
 
       setTitle("");
       setExcerpt("");
+      setImage(null);
       setContent("");
+
+      if (fileInputRef.current) fileInputRef.current.value = "";
+
       editorRef.current?.commands.clearContent();
     } catch (err) {
       console.error(err);
@@ -55,7 +85,7 @@ function WriteStory() {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col mb-20 gap-14 items-center md:w-auto md:mb-32 md:h-screen">
+        <div className="flex flex-col gap-14 mb-12 items-center md:w-auto md:mb-32 md:h-auto">
           <div className="flex items-center flex-col md:flex-row gap-6 border-b pb-2 md:pb-0 border-neutral-400">
             <div>
               <Input
@@ -71,6 +101,25 @@ function WriteStory() {
                 Publish
               </Button>
             </div>
+          </div>
+          <div className="md:mb-28">
+            {image && typeof image !== "string" && (
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Cover photo"
+                className="w-[320px] h-48 md:w-125 md:h-75"
+              />
+            )}
+            <Input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={(e) => {
+                if (image) URL.revokeObjectURL(image);
+                setImage(e.target.files[0]);
+              }}
+            />
+            <p className="font-inter text-sm text-center mt-2 md:text-base">Add cover image</p>
           </div>
           <div>
             <Textarea

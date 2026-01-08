@@ -25,8 +25,7 @@ function PublishedStory() {
         if (!res.ok) {
           throw new Error(data.message || "Failed to fetch stories");
         }
-
-        console.log(data);
+        
         setStories(data.story || []);
       } catch (err) {
         console.error(err);
