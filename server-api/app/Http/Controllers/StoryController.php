@@ -28,17 +28,29 @@ class StoryController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        $story = Story::with('user:id,firstname,lastname,email')->findOrFail($id);
+
+        $cover_image = asset('storage/' . $story->cover_image);
+
+        return response()->json([
+            'story' => $story,
+            'cover_image' => $cover_image
+        ]);
+    }
+
     public function myPublishedStories(Request $request)
     {
         $stories = Story::where('user_id', $request->user()->id)
-        ->latest()
-        ->get()
-        ->map(function ($story) {
-            if ($story->cover_image) {
-                $story->cover_image = asset('storage/' . $story->cover_image);
-            }
-            return $story;
-        });
+            ->latest()
+            ->get()
+            ->map(function ($story) {
+                if ($story->cover_image) {
+                    $story->cover_image = asset('storage/' . $story->cover_image);
+                }
+                return $story;
+            });
 
         return response()->json([
             'story' => $stories,
@@ -88,14 +100,21 @@ class StoryController extends Controller
     public function uploadCoverImage(Request $request)
     {
         $request->validate([
-            'cover' => 'required|image|max:10240'
+            'cover' => 'nullable|image|max:10240'
         ]);
+
+        if (!$request->hasFile('cover')) {
+            return response()->json([
+                'path' => null,
+                'url' => null
+            ]);
+        }
 
         $path = $request->file('cover')->store('covers', 'public');
 
         return response()->json([
             'path' => $path,
-            'url' => asset("storage/$path")
+            'url' => $path ? asset("storage/$path") : null,
         ]);
     }
 }
