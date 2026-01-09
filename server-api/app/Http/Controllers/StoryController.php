@@ -10,9 +10,19 @@ class StoryController extends Controller
 {
     public function index(Request $request)
     {
-        // $story = Story::with('user:id,firstname,lastname,email')->inRandomOrder()->get();
+        $search = $request->query('search');
 
         $stories = Story::where('user_id', '!=', $request->user()->id)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'LIKE', "%{$search}%")
+                        ->orWhere('excerpt', 'LIKE', "%{$search}%")
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('firstname', 'LIKE', "%{$search}%")
+                                ->orWhere('lastname', 'LIKE', "%{$search}%");
+                        });
+                });
+            })
             ->with('user:id,firstname,lastname,email')
             ->inRandomOrder()
             ->get()
@@ -24,7 +34,7 @@ class StoryController extends Controller
             });
 
         return response()->json([
-            'story' => $stories,
+            'stories' => $stories,
         ]);
     }
 
