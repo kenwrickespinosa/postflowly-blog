@@ -3,17 +3,18 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { IoSearch } from "react-icons/io5";
 
-function Searchbar({ searchQuery, onSearch }) {
+function Searchbar({ search, onSearch, onFetch }) {
   return (
     <div>
       <div className="flex gap-4">
         <Input
           type="text"
-          value={searchQuery}
+          value={search}
           onChange={(e) => onSearch(e.target.value)}
-          className="w-56.25"
+          placeholder="Search stories"
+          className="w-56.25 font-inter md:h-12 md:text-lg md:w-100"
         />
-        <Button>
+        <Button onClick={() => onFetch(search)} className="bg-green-700 cursor-pointer md:h-12 md:w-12 hover:bg-green-900">
           <IoSearch />
         </Button>
       </div>
