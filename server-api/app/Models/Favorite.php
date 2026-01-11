@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Story extends Model
+class Favorite extends Model
 {
     protected $fillable = [
         'user_id',
-        'title',
-        'excerpt',
-        'cover_image',
-        'content',
+        'story_id',
     ];
 
     public function user(): BelongsTo
@@ -21,8 +17,8 @@ class Story extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function favorites(): HasMany
+    public function story(): BelongsTo
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsTo(Story::class);
     }
 }
