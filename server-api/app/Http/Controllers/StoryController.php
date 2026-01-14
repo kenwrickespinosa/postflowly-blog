@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Story;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoryController extends Controller
 {
@@ -24,6 +25,11 @@ class StoryController extends Controller
                 });
             })
             ->with('user:id,firstname,lastname,email')
+            ->withExists([
+                'favorites as is_favorite' => function ($q) {
+                    $q->where('user_id', Auth::id());
+                }
+            ])
             ->inRandomOrder()
             ->get()
             ->map(function ($story) {
