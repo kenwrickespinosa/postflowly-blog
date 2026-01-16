@@ -1,8 +1,10 @@
 import StoryCard from "@/components/StoryCard";
+import { Spinner } from "@/components/ui/spinner";
 import React, { useEffect, useState } from "react";
 
 function PublishedStory() {
   const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -25,19 +27,29 @@ function PublishedStory() {
         if (!res.ok) {
           throw new Error(data.message || "Failed to fetch stories");
         }
-        
+
         setStories(data.story || []);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchStories();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center my-10 md:my-0">
+        <Spinner className="size-5 md:size-6" />
+      </div>
+    );
+  }
+
   if (stories.length === 0) {
     return (
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center my-10 md:my-0">
         <p>No published stories</p>
       </div>
     );

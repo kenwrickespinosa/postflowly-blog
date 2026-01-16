@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import Searchbar from "./Searchbar";
 import PostFeed from "./PostFeed";
 import { useSearchParams } from "react-router-dom";
+import { Spinner } from "@/components/ui/spinner";
 
 function index() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [search, setSearch] = useState(""); // Search query
   const [stories, setStories] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFetch = async (query = "") => {
     setSearchParams(query ? { search: query } : {});
@@ -35,11 +38,15 @@ function index() {
         setStories(data.stories || []);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchStories();
   }, [searchParams]);
+
+  // if (isLoading) return <div>{isLoading && <Spinner />}</div>;
 
   return (
     <div className="flex flex-col items-center px-2 my-12">
@@ -47,6 +54,9 @@ function index() {
         <Searchbar search={search} onSearch={setSearch} onFetch={handleFetch} />
       </div>
       <div>
+        <div className="my-10 md:my-20">
+          {isLoading && (<Spinner className="size-5 md:size-6" />)}
+        </div>
         <PostFeed stories={stories} />
       </div>
     </div>

@@ -97,7 +97,7 @@ function WriteStory() {
               />
             </div>
             <div>
-              <Button type="submit" className="cursor-pointer">
+              <Button type="submit" className="cursor-pointer bg-green-700 hover:bg-green-900">
                 Publish
               </Button>
             </div>

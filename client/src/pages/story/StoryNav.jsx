@@ -11,7 +11,7 @@ function StoryNav() {
           className={({ isActive }) =>
             `${
               isActive
-                ? "border-b-2 border-green-400 font-bold text-green-400"
+                ? "border-b-2 border-green-700 font-bold text-green-700"
                 : "text-inherit"
             } pb-2 md:pb-4 md:text-2xl`
           }
@@ -24,14 +24,26 @@ function StoryNav() {
           className={({ isActive }) =>
             `${
               isActive
-                ? "border-b-2 border-green-400 font-bold text-green-400"
+                ? "border-b-2 border-green-700 font-bold text-green-700"
                 : "text-inherit"
             } pb-2 md:pb-4 md:text-2xl`
           }
         >
           Published Story
         </NavLink>
-        <NavLink>Favorite Story</NavLink>
+        <NavLink
+          to="favorite-stories"
+          end={false}
+          className={({ isActive }) =>
+            `${
+              isActive
+                ? "border-b-2 border-green-700 font-bold text-green-700"
+                : "text-inherit"
+            } pb-2 md:pb-4 md:text-2xl`
+          }
+        >
+          Favorite Story
+        </NavLink>
       </nav>
       <main>
         <Outlet />

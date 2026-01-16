@@ -7,7 +7,7 @@ function PostFeed({ stories }) {
       <div className="my-10 md:my-20">
         {stories.map((story) => (
           <div key={story.id} className="mb-6 bg-neutral-50 rounded-lg w-75 md:w-178.75">
-            <StoryCard story={story} />
+            <StoryCard story={story} showFavorite />
           </div>
         ))}
       </div>
