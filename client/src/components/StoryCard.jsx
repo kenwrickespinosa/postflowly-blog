@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCalendar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+import { FaBookmark } from "react-icons/fa";
 
-function StoryCard({ story }) {
+function StoryCard({ story, showFavorite = false }) {
   const navigate = useNavigate();
+
+  const [isFavorite, setIsFavorite] = useState(story.is_favorite);
 
   // Format date to string
   const formatDate = () => {
@@ -18,6 +22,34 @@ function StoryCard({ story }) {
     };
 
     return date.toLocaleDateString("en-PH", options);
+  };
+
+  const handleFavorite = async (e) => {
+    try {
+      e.stopPropagation();
+      const token = localStorage.getItem("token");
+
+      const res = await fetch("http://127.0.0.1:8000/api/favorite/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          story_id: story.id,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok)
+        throw new Error(data.message || "Failed to fetch favorites stories");
+
+      setIsFavorite(true);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const openStory = () => {
@@ -58,6 +90,19 @@ function StoryCard({ story }) {
             <p className="font-inter text-xs text-neutral-600">
               {formatDate()}
             </p>
+          </div>
+
+          <div className="flex justify-end md:justify-start">
+            {showFavorite && (
+              <Button
+                onClick={handleFavorite}
+                disabled={isFavorite}
+                className="bg-green-800 hover:bg-green-900 cursor-pointer"
+              >
+                <FaBookmark className={isFavorite ? "text-yellow-500" : "text-white"} />
+                {isFavorite ? "Saved to favorite" : "Add to favorite"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -82,13 +82,13 @@ function StoryPage() {
           </p>
         </div>
         <div
-          className={
-            coverImage &&
+          className={`flex justify-center
+            ${(coverImage &&
             coverImage !== "null" &&
             coverImage !== "" &&
             coverImage !== "http://127.0.0.1:8000/storage"
               ? ""
-              : "hidden"
+              : "hidden")}`
           }
         >
           <img src={coverImage} />

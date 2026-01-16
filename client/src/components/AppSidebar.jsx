@@ -73,7 +73,7 @@ function AppSidebar() {
                     className={({ isActive }) =>
                       `w-full font-inter ${
                         isActive
-                          ? "text-green-600 w-full font-bold"
+                          ? "text-green-700 w-full font-bold"
                           : "text-inherit w-full"
                       }`
                     }
